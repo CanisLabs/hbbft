@@ -120,6 +120,8 @@
 #![warn(missing_docs)]
 
 pub use threshold_crypto as crypto;
+pub use std::os::raw::c_char;
+pub use std::ffi::CString;
 
 mod fault_log;
 mod messaging;
@@ -147,3 +149,32 @@ pub use crate::sync_key_gen::{to_pub_keys, PubKeyMap};
 pub use crate::traits::{
     ConsensusProtocol, Contribution, CpStep, Epoched, Message, NodeIdT, SessionIdT, Step,
 };
+
+/// seems odd to do every export here, asssuming I am missing something
+/// in how to build libs
+pub const FFI_LIB: &str = "libhbbftp.so";
+
+fn poop() -> String {
+    return String::from("poop");
+}
+
+/// something
+#[no_mangle]
+pub extern "C" fn c_poop() -> *mut c_char {
+    let rust_string: String = poop();
+    let c_string: CString = CString::new(rust_string).expect("broke");
+    return c_string.into_raw();
+}
+
+/// something else?
+#[no_mangle]
+pub extern "C" fn c_poop2_free(ptr: *mut c_char) {
+    unsafe {
+        if ptr.is_null() {
+            return;
+        }
+        CString::from_raw(ptr);
+    }
+}
+
+//next export network info

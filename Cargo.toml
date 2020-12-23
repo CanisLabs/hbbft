@@ -16,6 +16,7 @@ readme = "README.md"
 repository = "https://github.com/poanetwork/hbbft"
 description = "The Honey Badger of Byzantine Fault Tolerant Consensus Protocols"
 edition = "2018"
+build = "build.rs"
 
 [badges]
 travis-ci = { repository = "poanetwork/hbbft" }
@@ -46,6 +47,9 @@ itertools = "0.9.0"
 number_prefix = "0.3.0"
 proptest = "0.9.4"
 
+[build-dependencies]
+cbindgen = "0.9.*"
+
 [[example]]
 name = "consensus-node"
 
@@ -61,3 +65,7 @@ overflow-checks = true
 [features]
 use-insecure-test-only-mock-crypto = ["threshold_crypto/use-insecure-test-only-mock-crypto"]
 simd-accel = ["reed-solomon-erasure/simd-accel"]
+
+[lib]
+name = "hbbft"
+crate-type = ["cdylib", "rlib"]
